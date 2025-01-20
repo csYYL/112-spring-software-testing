@@ -2,7 +2,9 @@ const puppeteer = require('puppeteer');
 
 (async () => {
     // Launch the browser and open a new blank page
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
 
     // Navigate the page to a URL
@@ -10,13 +12,37 @@ const puppeteer = require('puppeteer');
 
     // Hints:
     // Click search button
+    const searchButton = '.DocSearch-Button';
+    await page.waitForSelector(searchButton);
+    await page.click(searchButton);
+
     // Type into search box
+    const searchBox = '.DocSearch-Input';
+    await page.waitForSelector(searchBox);
+
     // Wait for search result
+    await page.type(searchBox, 'chipi chipi chapa chapa' , { delay: 1000 });
     // Get the `Docs` result section
+    const docsSection = '#docsearch-hits6-item-18';
+    await page.waitForSelector(docsSection);
     // Click on first result in `Docs` section
-    // Locate the title
+    await page.click(docsSection);
+
+    // // Locate the title
+    // const s = '.markdown h1';
+    // const textselector = await page.waitForSelector(s);
+    // const title = await page.evaluate(element => element.textContent, textselector);
+    await page.waitForSelector('h1'); // Wait for the main title element (usually an h1 tag)
+
+    const title = await page.evaluate(() => {
+        const titleElement = document.querySelector('h1'); // Target the h1 element
+        return titleElement ? titleElement.textContent : null;
+      });
+    
     // Print the title
+    console.log(title);
 
     // Close the browser
     await browser.close();
+
 })();
