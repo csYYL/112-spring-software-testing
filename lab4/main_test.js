@@ -9,10 +9,9 @@ const puppeteer = require('puppeteer');
 
     // Navigate the page to a URL
     await page.goto('https://pptr.dev/');
-
     // Hints:
     // Click search button
-    const searchButton = '.DocSearch-Button';
+    const searchButton = '.DocSearch.DocSearch-Button'
     await page.waitForSelector(searchButton);
     await page.click(searchButton);
 
@@ -29,15 +28,10 @@ const puppeteer = require('puppeteer');
     await page.click(docsSection);
 
     // // Locate the title
-    // const s = '.markdown h1';
-    // const textselector = await page.waitForSelector(s);
-    // const title = await page.evaluate(element => element.textContent, textselector);
-    await page.waitForSelector('h1'); // Wait for the main title element (usually an h1 tag)
+    const s = '.markdown h1';
+    const textselector = await page.waitForSelector(s);
+    const title = await page.evaluate(element => element.textContent, textselector);
 
-    const title = await page.evaluate(() => {
-        const titleElement = document.querySelector('h1'); // Target the h1 element
-        return titleElement ? titleElement.textContent : null;
-      });
     
     // Print the title
     console.log(title);
